@@ -9,72 +9,54 @@
     CardTitle,
     CardHeader,
     Button,
+    Collapse,
   } from "sveltestrap";
-  import { onMount } from "svelte";
 
   let result = "Waiting for your input above";
   let input_sent = "";
-  let select_feature = "";
-  let features = [];
-  let original_sent = "";
-  let pay_yet = 1;
+  let lang = "vi";
+  let edit_url = false;
 
-  let url = "https://8117-103-141-140-74.ap.ngrok.io";
-  onMount(() => {
-    fetch(`${url}/features/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => (features = data.features));
-
-    let last_day = new Date(2022, 8, 15).getTime();
-    let today = new Date().getTime();
-    // pay_yet = (last_day - today) / 1561603070;
-    pay_yet = 1;
-  });
+  let url = "https://0e0b-103-141-140-74.ap.ngrok.io";
 
   function submit_sentence() {
-    // let select_feature = "detect_svo_v1";
-    let sent_text = "";
-    if (select_feature.startsWith("recommend")) {
-      sent_text = input_sent + "$" + original_sent;
-    } else {
-      sent_text = input_sent;
-    }
-    fetch(`${url}/api/`, {
+    fetch(`${url}/api`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        text: sent_text,
-        feature: select_feature,
+        text: input_sent,
+        lang: lang,
       }),
     })
       .then((response) => response.json())
-      .then((data) => (result = data.ResultObj.result));
+      .then((data) => {
+        if (data.IsSuccessed) {
+          result = data.ResultObj.result;
+        } else {
+          alert("There is an error");
+        }
+      });
   }
 </script>
 
-<Card style="opacity: {pay_yet};">
+<Card>
   <CardHeader>
-    <CardTitle>GrammarlyHCMUT Demo</CardTitle>
+    <CardTitle>Unsupervised paraphrasing</CardTitle>
   </CardHeader>
   <CardBody>
     <Form>
       <form on:submit|preventDefault={submit_sentence}>
         <FormGroup>
-          <Label for="something">Question to this answer</Label>
-          <Input
-            type="text"
-            name="text"
-            placeholder="Only use this feature with recommend_svo_v2. Don't use it else where since it's not wise to do so. (^_^)"
-            bind:value={original_sent}
-          />
+          <Input type="switch" bind:checked={edit_url} label="Edit URL" />
         </FormGroup>
+        <Collapse isOpen={edit_url}>
+          <FormGroup>
+            <Label for="url">Url</Label>
+            <Input type="url" id="url" bind:value={url} />
+          </FormGroup>
+        </Collapse>
         <FormGroup>
           <Label for="exampleEmail">Sentence</Label>
           <Input
@@ -86,17 +68,16 @@
         </FormGroup>
         <FormGroup>
           <Label for="exampleSelect">Choose your feature</Label>
-          <Input bind:value={select_feature} type="select">
-            {#each features as feature}
-              <option value={feature}>{feature}</option>
-            {/each}
+          <Input bind:value={lang} type="select">
+            <option value="vi">Vietnamese</option>
+            <option value="en">English</option>
           </Input>
         </FormGroup>
         <FormGroup>
           <Label for="exampleEmail">Result</Label>
           <Input type="text" bind:value={result} disabled />
         </FormGroup>
-        <Button outline color="primary">Submit</Button>
+        <Button outline color="primary">Paraphrase</Button>
       </form>
     </Form>
   </CardBody>
