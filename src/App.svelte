@@ -14,25 +14,23 @@
 
   let result = "Waiting for your input above";
   let input_sent = "";
-  let lang = "vi";
   let edit_url = false;
 
   let url = "https://0e0b-103-141-140-74.ap.ngrok.io";
 
   function submit_sentence() {
-    fetch(`${url}/api`, {
+    fetch(`${url}/paraphrase`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         text: input_sent,
-        lang: lang,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.IsSuccessed) {
+        if (data.IsSuccessed && data.Message == "Success") {
           result = data.ResultObj.result;
         } else {
           alert("There is an error");
@@ -43,8 +41,11 @@
 
 <Card>
   <CardHeader>
-    <CardTitle>Unsupervised paraphrasing</CardTitle>
-  </CardHeader>
+    <CardTitle
+      >LAMPAT : Low-rank Adaptation for Multilingual Paraphrasing using
+      Adversarial Training</CardTitle
+    ></CardHeader
+  >
   <CardBody>
     <Form>
       <form on:submit|preventDefault={submit_sentence}>
@@ -65,13 +66,6 @@
             placeholder="Input your text"
             bind:value={input_sent}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleSelect">Choose your feature</Label>
-          <Input bind:value={lang} type="select">
-            <option value="vi">Vietnamese</option>
-            <option value="en">English</option>
-          </Input>
         </FormGroup>
         <FormGroup>
           <Label for="exampleEmail">Result</Label>
