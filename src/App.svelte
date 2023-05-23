@@ -12,7 +12,7 @@
     Collapse,
   } from "sveltestrap";
 
-  let result = "Waiting for your input above";
+  let result = "Happy birthday, Trình";
   let input_sent = "";
   let edit_url = false;
 
