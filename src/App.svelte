@@ -14,6 +14,7 @@
 
   let result = "Happy birthday, Trình";
   let input_sent = "";
+  let lang = "vi";
   let edit_url = false;
 
   let url = "https://0e0b-103-141-140-74.ap.ngrok.io";
@@ -26,6 +27,7 @@
       },
       body: JSON.stringify({
         text: input_sent,
+        lang: lang,
       }),
     })
       .then((response) => response.json())
@@ -66,6 +68,18 @@
             placeholder="Input your text"
             bind:value={input_sent}
           />
+        </FormGroup>
+        <FormGroup>
+          <Label for="exampleSelect">Choose your language</Label>
+          <Input bind:value={lang} type="select">
+            <option value="vi">Vietnamese</option>
+            <option value="en">English</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+            <option value="zh">Chinese</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+          </Input>
         </FormGroup>
         <FormGroup>
           <Label for="exampleEmail">Result</Label>
