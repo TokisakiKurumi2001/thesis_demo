@@ -17,7 +17,7 @@
   let lang = "vi";
   let edit_url = false;
 
-  let url = "https://0e0b-103-141-140-74.ap.ngrok.io";
+  let url = "https://ef1f-1-53-51-216.ngrok-free.app";
 
   function submit_sentence() {
     fetch(`${url}/paraphrase`, {
